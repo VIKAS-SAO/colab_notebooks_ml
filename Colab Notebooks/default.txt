@@ -1,0 +1,96 @@
+import time
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import random
+import math
+import sys
+import copy
+import matplotlib.pyplot as plt 
+%matplotlib inline
+from sklearn.preprocessing import LabelEncoder 
+from sklearn.model_selection import train_test_split
+import warnings
+warnings.filterwarnings('ignore') 
+from zipfile import ZipFile 
+from collections import Counter
+
+
+
+train = pd.read_csv('../input/logisticregressionlecture/train.csv')
+test = pd.read_csv('../input/logisticregressionlecture/test.csv') 
+
+
+X_train, X_test, Y_train, Y_test = train_test_split( X, Y, test_size=0.20, random_state=0) 
+
+
+def get_score(model , X_data , Y_data , test_ratio ,random_state ):
+    X_train, X_test, Y_train, Y_test = train_test_split( X_data, Y_data, test_size=test_ratio , random_state=random_state) 
+    model.fit(X_train ,Y_train)
+  return model.score(X_test ,Y_test)
+
+def fill_missing(data):
+  for col in data.columns:
+    data[col] = data[col].fillna(data[col].mean())
+
+
+
+  
+
+
+#classification models
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
+from sklearn import svm
+from sklearn.neural_network import MLPClassifier
+
+modelNames=['DecisionTreeClassifier', 'RandomForestClassifier',
+            'KNeighborsClassifier', 'GaussianNB', 
+            'LogisticRegression', 'svm', 'MLPClassifier']
+model = [DecisionTreeClassifier() , 
+        RandomForestClassifier(),
+       KNeighborsClassifier() ,  
+       GaussianNB(),
+       LogisticRegression(),
+       svm.LinearSVC(),
+        MLPClassifier(random_state=1, max_iter=300)
+        ]
+
+#evaluation
+from sklearn.metrics import accuracy_score , confusion_matrix, classification_report
+ 
+#submission
+
+ 
+model.fit(X_data , Y_data)
+ans = model.predict(test)
+ 
+
+ans =  pd.DataFrame({
+    'id': test['id'],
+    'target':ans
+})
+ans.to_csv('submission.csv' ,index =False)
+ans.head()
+
+
+
+
+
+ 
+
+
+// preventing google colab from disconnecting
+function ConnectButton(){
+    console.log("Working"); 
+    document.querySelector("#connect").click() 
+}
+setInterval(ConnectButton,60000);
+
+
+
+
+  
